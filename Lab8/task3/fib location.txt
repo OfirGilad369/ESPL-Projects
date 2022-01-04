@@ -1,0 +1,5 @@
+fibonacci:
+72: 0000065d   105 FUNC    GLOBAL DEFAULT   14 fib
+
+task3:
+70: 000005dd    69 FUNC    GLOBAL DEFAULT   14 fib

@@ -1,0 +1,23 @@
+Questions:
+1. Given the results, explain to the TA what is the memory layout of arrays.
+2. What can you say about the behavior of the '+' operator?
+
+Answers:
+1. for the output:
+- int array value at index 0: 0xffea4e8c
+- int array value at index 1: 0xffea4e90
+- int array value at index 2: 0xffea4e94
+- char array value at index 0: 0xffea4e99
+- char array value at index 1: 0xffea4e9a
+- char array value at index 2: 0xffea4e9b
+- iarray: 0xffea4e8c
+- iarray+1: 0xffea4e90
+- carray: 0xffea4e99
+- carray+1: 0xffea4e9a
+
+we can say:
+
+
+2. The behavior of the '+' operator is to move the pointer to point on the next address where the next variable is declared on the memory.
+The jump is based of the size of the type of the variable we are jumping to.
+In our case, for int variables we jumped 4 spaces (4 bytes), and for char variables we jumped 1 spaces (1 bytes).

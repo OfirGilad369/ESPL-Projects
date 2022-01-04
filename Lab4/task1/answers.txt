@@ -1,0 +1,12 @@
+How many parameters does this function have?
+1 parameter = input string.
+
+What does this function return?
+This function returns the length of the input string.
+
+How many local variables are used by this function?
+0 local variables, since we are not pushing any value into the stack.
+all the calculations are done in the registers themselfs of the CPU and not in any place of the RAM.
+
+Is there a function in the C standard library which is the counterpart of this function?
+Other then the predefined function strlen() in string.h, there is no function in the C standard library which do the same.

@@ -1,0 +1,23 @@
+1. What is the offset of the section header table?
+Start of section header: 4412 (bytes into file)
+
+2. How many section headers/entries are there?
+Number of secion headers: 29
+
+3. Find the offset of the shstrtab.
+Starting at offset 0x113c:
+section 26, offset: 00104b
+
+4. Find the offset (file location) of the function main. (hint: use readelf -s and readelf -S)
+[13] .text             PROGBITS        080483b0 0003b0
+65: 08048464   175 FUNC    GLOBAL DEFAULT   13 main
+offset: (0x8048464 - 0x80483b0) + 0x3b0 = 0x464
+
+5. Find the size of the function main.
+size: 175 (bytes) 
+
+6. Which section does the main belong to?
+In section: .symtab
+offest: 0015c4
+entry: 65
+value: 08048464

@@ -1,0 +1,10 @@
+Task 0 theory questions:
+
+1. The execution ends after execv although we loop infinitely for the reason that execv replaces the process that calls it with a different program,
+and since the current process is now running a different program the loop will no longer continue.
+
+2. we must place the full path of the executable file because with execv the first argument is a path for the executable and with execvp the first argument is a file name, 
+and then it looks for the appropriate path. 
+
+3. still wildcards are not working because wildcards are expanded by the shell,
+and not by the execv or in the process which receives the command line.

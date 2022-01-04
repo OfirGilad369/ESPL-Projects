@@ -1,0 +1,11 @@
+1. Do they differ in size? (hint: use ls -l *chezi)
+No, they have the same size: 1237
+
+2. Why does their output differ? (hint: use readelf -h)
+They have different Entry point address:
+chezi: 0x804808a
+originalchezi: 0x8048080
+
+3. In what way is the entry point represented in the ELF file (arrangement of bytes: see ELF documentation page 9) ?
+entry point represented in the ELF file as:
+Elf32_Addr e_entry 

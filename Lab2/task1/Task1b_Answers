@@ -1,0 +1,20 @@
+Questions:
+1. Understand and explain to the TA the purpose of the distances printed in the point_at function.
+2. Where is each memory address allocated and what does it have to do with the printed distance?
+
+Answers:
+1.
+
+2. For the following output, we can say:
+dist1: (size_t)&addr6 - (size_t)p: -4
+dist2: (size_t)&local - (size_t)p: -1450185116 (Overflow positive)
+dist3: (size_t)&foo - (size_t)p:  -6451
+
+dist1 is the distance between the address of addr6 and addr5 which both allocated on the Uninitialized Data (BSS).
+The dist equal -4 since addr5 is of type int which is 4 bytes.
+
+dist2 is the distance between the address of local and addr5 which local is allocated in the Stack and addr5 in the Uninitialized Data (BSS).
+The dist equal -1450185116 since Uninitialized Data (BSS) variables are under the Heap start with a long distance from the Stack at the top .
+
+dist3 is the distance between the address of foo and addr5 which f is allocated in the Text Segment and addr5 in the Uninitialized Data (BSS).
+The dist equal -6451 since Uninitialized Data (BSS) variables are above the Initialized Data which are above the Data Segment .

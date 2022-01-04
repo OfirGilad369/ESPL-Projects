@@ -1,0 +1,8 @@
+Valgrind fix command:
+sudo apt install -y libc6-dbg:i386
+
+Valgrind check command:
+valgrind --leak-check=full --show-reachable=yes [program-name] [program parameters]
+
+task0 Valgrind command:
+valgrind -v --leak-check=full --show-reachable=yes ./bubblesort 3 4 2 1

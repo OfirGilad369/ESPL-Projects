@@ -1,0 +1,6 @@
+Task 1a theory question:
+
+The child should unconditionally call _exit() after execvp(). The execvp() will only return if it fails.
+
+(In other words, you don't kill the child process from the parent;
+you wait for the child process to exit, and write the child process so that it kills itself if the exec fails).

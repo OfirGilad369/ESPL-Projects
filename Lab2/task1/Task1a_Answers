@@ -1,0 +1,28 @@
+Questions:
+1. Could you tell the location of each memory address?
+2. What can you say about the numerical values? 
+3. Do they obey a particular order?
+
+Answers:
+1. For the following output, we can say:
+- &addr2: 0xffea4ecc - Stack address
+- &addr3: 0xffea4ed0 - Stack address
+- foo: 0x565a46e5 - Text Segment address
+- &addr5: 0x565a6018 - Uninitialized Data (BSS) address
+
+- addr0: 0x565a6008 - Initialized Data address
+- addr1: 0x565a6010  - Uninitialized Data (BSS) address
+- &addr6: 0x565a6014  - Uninitialized Data (BSS) address
+- yos: 0x565a4970 - Text Segment address
+- addr4: 0x578e4160 - Heap address
+- &addr4: 0xffea4ed4 - Stack address
+
+2. We can say that:
+a) Variables declared in the Stack have address that start with: "0xff" (At the top of the memory)
+b) Variables declared in the Heap have address that start with: "0x57" (Under the Stack)
+c) Variables declared in the Initialized/Uninitialized Data and Text Segment have address that start with: "0x56" (Under the Heap)
+
+3. Every new variable next to be used is declared above the old one and the space between them is based on the size of their declared type.
+
+
+
