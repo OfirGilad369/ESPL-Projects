@@ -112,6 +112,10 @@ def RunServer(host):
                             UDPServerSocket.sendto(message.encode('utf-8'),addr)
                         except:
                             message = "No such file or directory\n"
+
+                            if mountedUsers[addr]["path"] == "":
+                                mountedUsers[addr]["path"] = "/Server"
+
                             message += "\033[92m" + mountedUsers[addr]["path"] + " $ \033[0m"
                             UDPServerSocket.sendto(message.encode('utf-8'),addr)
 
@@ -136,4 +140,3 @@ def change_path_to_original(original_path):
 
 if __name__ == '__main__':
     RunServer(sys.argv[1])
- 

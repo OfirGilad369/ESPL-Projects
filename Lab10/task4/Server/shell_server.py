@@ -23,10 +23,21 @@ bufferSize = 1024
 def RecvData(sock,recvPackets):
     while True:
         data,addr = sock.recvfrom(bufferSize)
-        recvPackets.put((data,addr))
+
+        decoded_data = data.decode('utf-8')
+
+        if decoded_data.split()[0] == "sending_file":
+            recvPackets.put((data,addr))
+            size_of_next_message = int(decoded_data.split()[1])
+            data,addr = sock.recvfrom(size_of_next_message)
+            recvPackets.put((data,addr))
+        else:
+            recvPackets.put((data,addr))
 
 def RunServer(host):
     mountedUsers = {}
+    usersSharedPaths = {}
+    findRequestClient = ""
     #host = socket.gethostbyname(socket.gethostname())
     port = 5000
     print('Server hosting on IP-> '+str(host))
@@ -277,6 +288,89 @@ def RunServer(host):
                     message = "File operand doesn't exists\n"
                     message += "\033[92m" + mountedUsers[addr]["path"] + " $ \033[0m"
                     UDPServerSocket.sendto(message.encode('utf-8'),addr)
+
+        elif command == 'share':#making client directory shared
+            if len(request.split()) < 2:
+                message = "Missing directory operands\n"
+
+                if mountedUsers[addr]["mount_satus"] == "private":
+                    message += "\033[92m" + mountedUsers[addr]["path"] + " $ \033[0m"
+                else:
+                    message += "\033[92m" + shared_path + " $ \033[0m"
+
+                UDPServerSocket.sendto(message.encode('utf-8'),addr)
+                continue
+
+            usersSharedPaths[addr] = {"path": ' '.join(request.split()[1:])}
+            print(str(addr) + " shared the directory: " + str(usersSharedPaths[addr]["path"]))
+
+            if mountedUsers[addr]["mount_satus"] == "private":
+                message = "\033[92m" + mountedUsers[addr]["path"] + " $ \033[0m"
+            else:
+                message = "\033[92m" + shared_path + " $ \033[0m"
+
+            UDPServerSocket.sendto(message.encode('utf-8'),addr)
+
+        elif command == 'find':#copying a file from one client to another (if file found)
+            if len(request.split()) < 2:
+                data,addr = recvPackets.get()
+                message = "Missing file operands\n"
+
+                if mountedUsers[addr]["mount_satus"] == "private":
+                    message += "\033[92m" + mountedUsers[addr]["path"] + " $ \033[0m"
+                else:
+                    message += "\033[92m" + shared_path + " $ \033[0m"
+
+                UDPServerSocket.sendto(message.encode('utf-8'),addr)
+                continue
+
+            findRequestClient = addr
+            file_found = False
+            file_to_copy = ' '.join(request.split()[1:])
+
+            data,addr = recvPackets.get()
+            dest_locatin = data.decode('utf-8')
+
+            for user in usersSharedPaths:
+                if user != findRequestClient:
+                    message = command + " " + file_to_copy
+                    UDPServerSocket.sendto(message.encode('utf-8'),user)
+                    message = usersSharedPaths[user]["path"]
+                    UDPServerSocket.sendto(message.encode('utf-8'),user)
+
+                    data,addr = recvPackets.get()
+                    data = data.decode('utf-8')
+
+                    if data == "true":
+                        file_found = True
+                        print(str(addr) + " found the file")
+
+                        seperator = "<SEPERATOR>"
+
+                        data,addr = recvPackets.get()
+                        data = data.decode('utf-8')
+                        file_size = int(data.split()[1])
+
+                        data,addr = recvPackets.get()
+                        file_data = data
+
+                        if mountedUsers[findRequestClient]["mount_satus"] == "private":
+                            return_path = "\033[92m" + mountedUsers[findRequestClient]["path"] + " $ \033[0m"
+                        else:
+                            return_path = "\033[92m" + shared_path + " $ \033[0m"
+
+                        message = f"{dest_locatin}{seperator}{file_to_copy}{seperator}{file_size}{seperator}{return_path}"
+                        
+                        UDPServerSocket.sendto(message.encode('utf-8'),findRequestClient)
+                        UDPServerSocket.sendto(file_data,findRequestClient)
+
+                        break
+                    else:
+                        print(str(addr) + " didn't found the file")
+
+            if file_found == False:
+                message = "\033[92m" + mountedUsers[findRequestClient]["path"] + " $ \033[0m"
+                UDPServerSocket.sendto(message.encode('utf-8'),findRequestClient)
 
         else:
             if mountedUsers[addr]["mount_satus"] == "shared" and mountedUsers[user]["path"] != "":
